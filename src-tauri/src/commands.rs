@@ -100,9 +100,36 @@ pub async fn chat_with_llm(
     db_client: State<'_, db::DbClient>,
 ) -> Result<MessageData, String> {
     // 获取对话历史
-    let history = db::get_messages_by_conversation_id(&db_client, conversation_id.clone())
+    let mut history = db::get_messages_by_conversation_id(&db_client, conversation_id.clone())
         .await
         .map_err(|e| e.to_string())?;
+
+    // 检查是否存在system消息
+    let has_system_message = history.iter().any(|msg| msg.role == "system");
+
+    // 如果没有system消息，则创建一个
+    if !has_system_message {
+        println!("未找到system消息，创建默认system消息");
+        let conversation = db::get_conversation_by_id(&db_client, conversation_id.clone())
+            .await
+            .map_err(|e| e.to_string())?;
+        let student = conversation.unwrap().student;
+        let system_message_data = db::MessageData {
+            conversation_id: conversation_id.clone(),
+            role: "system".to_string(),
+            content: student.prompt.clone(),
+            name: None,
+            index: Some(0), // 确保system消息排在最前面
+        };
+
+        // 将system消息保存到数据库
+        let system_message = db::create_message(&db_client, system_message_data)
+            .await
+            .map_err(|e| e.to_string())?;
+
+        // 将系统消息添加到历史记录中
+        history.insert(0, system_message);
+    }
 
     // 构造消息列表，包含历史消息和新消息
     let mut messages = Vec::new();

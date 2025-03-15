@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useMyUserInfoStore } from '@/stores/userInfo'
 import { Icon } from '@iconify/vue'
+import { WebviewWindow } from '@tauri-apps/api/webviewWindow'
 
 const props = defineProps({
   size: {
@@ -20,7 +21,7 @@ const sizeClasses = {
   lg: 'h-32 w-32',
 }
 
-function handleFileSelect(event: Event) {
+const handleFileSelect = (event: Event) => {
   const input = event.target as HTMLInputElement
   if (input.files && input.files[0]) {
     const file = input.files[0]
@@ -33,15 +34,22 @@ function handleFileSelect(event: Event) {
 
     // Create FileReader to read the file
     const reader = new FileReader()
-    reader.onload = (e) => {
+    reader.onload = async (e) => {
       const result = e.target?.result as string
       avatarUrl.value = result
-      userStore.setUserAvatar(result)
-      if (window.electron) {
-        window.electron.sendToMainWindow('settings-updated', {
-          type: 'avatar',
-          value: avatarUrl.value,
-        })
+
+      // 通知主窗口更新头像
+      try {
+        const mainWindow = await WebviewWindow.getByLabel('main')
+        if (mainWindow) {
+          // 使用Tauri的emit方法发送事件
+          await mainWindow.emit('user-settings-updated', {
+            type: 'avatar',
+            value: avatarUrl.value,
+          })
+        }
+      } catch (error) {
+        console.error('Failed to notify main window:', error)
       }
     }
     reader.readAsDataURL(file)

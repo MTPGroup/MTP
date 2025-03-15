@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import type { ConversationWithStudent } from '~/models/conversation'
-import { tauriDbService } from '~/services/tauri-database'
+import { tauriService } from '~/services/tauri'
 
 export const useConversationStore = defineStore('conversation', () => {
   const conversations = useState<ConversationWithStudent[]>(() => [])
@@ -32,11 +32,13 @@ export const useConversationStore = defineStore('conversation', () => {
       // const response = await $fetch<ExtendedConversation[]>(
       //   '/api/conversations'
       // )
-      const response = await tauriDbService.getConversations()
+      const response = await tauriService.getConversations()
 
       conversations.value = response
       for (const conversation of conversations.value) {
-        const data = await tauriDbService.getMessagesByConversationId(conversation.id)
+        const data = await tauriService.getMessagesByConversationId(
+          conversation.id
+        )
         if (data.length > 0)
           conversation.lastMessage = data[data.length - 1].content
       }
@@ -51,7 +53,7 @@ export const useConversationStore = defineStore('conversation', () => {
   async function createConversation() {
     try {
       loading.value = true
-      const newConversation = await tauriDbService.createConversation({
+      const newConversation = await tauriService.createConversation({
         title: 'New Chat',
         studentName: 'AI',
       })
@@ -62,7 +64,7 @@ export const useConversationStore = defineStore('conversation', () => {
       }
       conversations.value.unshift({
         ...conversationWithDateObjects,
-        student_name: conversationWithDateObjects.studentName
+        student_name: conversationWithDateObjects.studentName,
       })
       activeConversationId.value = newConversation.id
     } catch (error) {
@@ -75,7 +77,7 @@ export const useConversationStore = defineStore('conversation', () => {
   async function deleteConversation(id: string) {
     try {
       loading.value = true
-      await tauriDbService.deleteConversation(id)
+      await tauriService.deleteConversation(id)
       const index = conversations.value.findIndex((conv) => conv.id === id)
       if (index !== -1) {
         conversations.value.splice(index, 1)
@@ -93,7 +95,10 @@ export const useConversationStore = defineStore('conversation', () => {
   async function updateConversation(id: string, data: { title?: string }) {
     try {
       loading.value = true
-      const updatedConversation = await tauriDbService.updateConversation(id, data)
+      const updatedConversation = await tauriService.updateConversation(
+        id,
+        data
+      )
       const index = conversations.value.findIndex((conv) => conv.id === id)
       if (index !== -1) {
         const updatedConversationWithDateObjects = {

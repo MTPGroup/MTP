@@ -6,7 +6,7 @@ const selectedItem = ref(null)
 
 const items = computed(() =>
   conversationStore.conversations.map((conversation) => ({
-    label: conversation.studentName,
+    label: conversation.student?.name,
     value: conversation.id,
   }))
 )

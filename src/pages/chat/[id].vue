@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { Icon } from '@iconify/vue'
 import type { Message } from '~/models/message'
-import { tauriDbService } from '~/services/tauri-database';
+import { tauriService } from '~/services/tauri'
 
 const dialogOpen = useState(() => false)
 const conversationStore = useConversationStore()
@@ -14,8 +14,8 @@ const newTitle = useState(() => '')
 const { scrollToBottom, isNearBottom } = useScrollToBottom()
 
 const changeTitle = async () => {
-  await tauriDbService.updateConversation(route.params.id.toString(), {
-    title: newTitle.value
+  await tauriService.updateConversation(route.params.id.toString(), {
+    title: newTitle.value,
   })
   newTitle.value = ''
   dialogOpen.value = false
@@ -38,7 +38,9 @@ async function loadConversation(conversationId: string) {
   isLoading.value = true
   try {
     // 通过API获取对话历史
-    const response = await tauriDbService.getMessagesByConversationId(conversationId)
+    const response = await tauriService.getMessagesByConversationId(
+      conversationId
+    )
     if (response) {
       messages.value = response
     }
@@ -85,13 +87,16 @@ async function sendMessage(text: string) {
 
   try {
     // 发送消息到API并获取回复
-    const data = await tauriDbService.chatWithLLM({ role: 'user', content: text }, conversationId)
+    const data = await tauriService.chatWithLLM(
+      { role: 'user', content: text },
+      conversationId
+    )
 
     if (data) {
       // 添加AI回复到UI
       messages.value[loadingMessageIndex] = {
         role: 'assistant',
-        content: data.content
+        content: data.content,
       }
       conversationStore.conversations.forEach((conversation) => {
         if (conversation.id === conversationId) {
@@ -107,7 +112,7 @@ async function sendMessage(text: string) {
     messages.value.pop()
     messages.value.push({
       role: 'assistant',
-      content: '服务器繁忙，请稍后重试(x)'
+      content: '服务器繁忙，请稍后重试(x)',
     })
     console.error('发送消息失败:', error)
   } finally {
@@ -119,7 +124,9 @@ async function sendMessage(text: string) {
 <template>
   <div class="flex flex-col h-full bg-blue-100">
     <!-- 头部信息 -->
-    <div class="flex h-[68px] items-start justify-between px-4 backdrop-blur-lg bg-blue-300 pt-7">
+    <div
+      class="flex h-[68px] items-start justify-between px-4 backdrop-blur-lg bg-blue-300 pt-7"
+    >
       <p class="text-lg">
         {{ conversationStore.activeConversation?.title || '聊天' }}
       </p>
@@ -150,7 +157,10 @@ async function sendMessage(text: string) {
           <Icon icon="ci:exit" class="size-6 text-muted-foreground" />
         </IButton>
         <IButton>
-          <Icon icon="ic:round-more-horiz" class="size-6 text-muted-foreground" />
+          <Icon
+            icon="ic:round-more-horiz"
+            class="size-6 text-muted-foreground"
+          />
         </IButton>
       </div>
     </div>
@@ -163,13 +173,25 @@ async function sendMessage(text: string) {
             <div v-if="isLoading" class="flex justify-center p-4">
               <CircleSpinner :size="32" color="#93c5fd" :thickness="3" />
             </div>
-            <div v-else-if="messages.length === 0" class="flex justify-center items-center h-full">
+            <div
+              v-else-if="messages.length === 0"
+              class="flex justify-center items-center h-full"
+            >
               <p class="text-muted-foreground">没有消息记录，开始聊天吧</p>
             </div>
-            <TransitionGroup v-else name="message-transition" id="scroll-area-viewport" tag="div"
-              class="flex flex-col gap-4">
-              <ChatContent v-for="(message, i) in messages" :key="i" :content="message.content || ''"
-                :isUser="message.role === 'user'" />
+            <TransitionGroup
+              v-else
+              name="message-transition"
+              id="scroll-area-viewport"
+              tag="div"
+              class="flex flex-col gap-4"
+            >
+              <ChatContent
+                v-for="(message, i) in messages"
+                :key="i"
+                :content="message.content || ''"
+                :isUser="message.role === 'user'"
+              />
             </TransitionGroup>
           </ScrollArea>
         </ResizablePanel>
@@ -178,7 +200,11 @@ async function sendMessage(text: string) {
 
         <!-- 输入区域 -->
         <ResizablePanel :default-size="38" class="min-h-[148px] max-h-80">
-          <ChatInputArea v-model="inputText" @send="sendMessage" :is-loading-response="isLoadingResponse" />
+          <ChatInputArea
+            v-model="inputText"
+            @send="sendMessage"
+            :is-loading-response="isLoadingResponse"
+          />
         </ResizablePanel>
       </ResizablePanelGroup>
     </div>

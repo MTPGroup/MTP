@@ -1,5 +1,5 @@
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-use tauri::Manager;
+use tauri::{path::BaseDirectory, Manager};
 
 mod commands;
 mod db;
@@ -19,8 +19,19 @@ pub fn run() {
             }
             // 初始化数据库
             let handle = app.handle();
+            let db_path = handle
+                .path()
+                .resolve("data/db.sqlite", BaseDirectory::Resource)?;
+            let students_content_path = handle
+                .path()
+                .resolve("data/students.json", BaseDirectory::Resource)?;
+            let students_data_path = handle
+                .path()
+                .resolve("data/students_min.json", BaseDirectory::Resource)?;
             tauri::async_runtime::block_on(async {
-                let db_client = db::init_db().await.expect("Failed to initialize database");
+                let db_client = db::init_db(db_path, students_content_path, students_data_path)
+                    .await
+                    .expect("Failed to initialize database");
                 handle.manage(db_client);
             });
             Ok(())

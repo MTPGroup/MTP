@@ -1,24 +1,31 @@
 <script setup lang="ts">
 import { useMyUserInfoStore } from '@/stores/userInfo'
 import { Icon } from '@iconify/vue'
+import { WebviewWindow } from '@tauri-apps/api/webviewWindow'
 import { useToast } from '../toast'
 
 const { toast } = useToast()
 const userStore = useMyUserInfoStore()
 const username = useState(() => userStore.userName)
 
-const saveUsername = () => {
+const saveUsername = async () => {
   console.log('Saving username:', username.value)
-  userStore.setUserName(username.value)
   toast({
     title: '设置已保存',
     description: '用户名已更新成功',
   })
-  if (window.electron) {
-    window.electron.sendToMainWindow('settings-updated', {
-      type: 'username',
-      value: username.value,
-    })
+  // 通知主窗口更新用户名
+  try {
+    const mainWindow = await WebviewWindow.getByLabel('main')
+    if (mainWindow) {
+      // 使用Tauri的emit方法发送事件
+      await mainWindow.emit('user-settings-updated', {
+        type: 'username',
+        value: username.value,
+      })
+    }
+  } catch (error) {
+    console.error('Failed to notify main window:', error)
   }
 }
 

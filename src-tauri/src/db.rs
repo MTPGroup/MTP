@@ -6,6 +6,7 @@ use sea_orm::{
     PaginatorTrait, QueryFilter, QueryOrder, Set,
 };
 use serde::{Deserialize, Serialize};
+use std::path::PathBuf;
 use std::sync::Arc;
 use tokio::sync::Mutex;
 
@@ -49,17 +50,21 @@ pub struct MessageData {
 }
 
 // 初始化数据库客户端
-pub async fn init_db() -> Result<DbClient, DbErr> {
+pub async fn init_db(
+    db_path: PathBuf,
+    students_content_path: PathBuf,
+    students_data_path: PathBuf,
+) -> Result<DbClient, DbErr> {
     // 使用应用数据目录而不是相对路径
-    let app_dir =
-        std::env::current_dir().map_err(|e| DbErr::Custom(format!("无法获取当前目录: {}", e)))?;
+    // let app_dir =
+    //     std::env::current_dir().map_err(|e| DbErr::Custom(format!("无法获取当前目录: {}", e)))?;
 
     // 确保数据目录存在
-    let db_dir = app_dir.join("data");
-    std::fs::create_dir_all(&db_dir)
-        .map_err(|e| DbErr::Custom(format!("无法创建数据目录: {}", e)))?;
+    // let db_dir = app_dir.join("data");
+    // std::fs::create_dir_all(&db_dir)
+    //     .map_err(|e| DbErr::Custom(format!("无法创建数据目录: {}", e)))?;
 
-    let db_path = db_dir.join("db.sqlite");
+    // let db_path = db_dir.join("db.sqlite");
     println!("数据库路径: {}", db_path.display());
     // 检查数据库文件是否存在，如果不存在则创建空文件
     if !db_path.exists() {
@@ -68,8 +73,9 @@ pub async fn init_db() -> Result<DbClient, DbErr> {
             .map_err(|e| DbErr::Custom(format!("无法创建数据库文件: {}", e)))?;
     }
 
-    let db_url = format!("sqlite://{}", db_path.display());
-    // let db_url = "sqlite://./db.sqlite";
+    // let db_url = format!("sqlite://{}", db_path.display());
+    let db_path_str = db_path.to_string_lossy().replace("\\\\?\\", "");
+    let db_url = format!("sqlite:{}", db_path_str);
     let conn = sea_orm::Database::connect(db_url).await?;
 
     // 运行迁移以确保表结构存在
@@ -80,48 +86,74 @@ pub async fn init_db() -> Result<DbClient, DbErr> {
 
     if student_count == 0 {
         // 数据库中没有学生数据，需要初始化
-        initialize_database(&conn).await?;
+        initialize_database(&conn, students_content_path, students_data_path).await?;
     }
 
     Ok(Arc::new(Mutex::new(conn)))
 }
 
 // 初始化数据库数据
-async fn initialize_database(conn: &DatabaseConnection) -> Result<(), DbErr> {
+async fn initialize_database(
+    conn: &DatabaseConnection,
+    students_content_path: PathBuf,
+    students_data_path: PathBuf,
+) -> Result<(), DbErr> {
     println!("开始初始化数据库...");
 
     // 获取学生数据
     println!("正在获取学生数据...");
-    let base_url = "https://arona.hanasaki.tech/api/student";
+    // let base_url = "https://arona.hanasaki.tech/api/student";
 
-    let response = reqwest::get(base_url)
-        .await
-        .map_err(|e| DbErr::Custom(format!("Failed to fetch student data: {}", e)))?;
+    // let response = reqwest::get(base_url)
+    //     .await
+    //     .map_err(|e| DbErr::Custom(format!("Failed to fetch student data: {}", e)))?;
 
-    let data: serde_json::Value = response
-        .json()
-        .await
-        .map_err(|e| DbErr::Custom(format!("Failed to parse student data: {}", e)))?;
+    // let data: serde_json::Value = response
+    //     .json()
+    //     .await
+    //     .map_err(|e| DbErr::Custom(format!("Failed to parse student data: {}", e)))?;
+    let file = std::fs::File::open(&students_data_path).unwrap();
+    let student_data: serde_json::Value = serde_json::from_reader(file).unwrap();
+
+    let file = std::fs::File::open(&students_content_path).unwrap();
+    let student_content: serde_json::Value = serde_json::from_reader(file).unwrap();
 
     // 学生默认prompt模板
     let get_default_prompt = |student_name: &str| -> String {
+        // 在数组中查找对应名称的学生
+        let empty_vec = Vec::new();
+        let student_info = student_content
+            .as_array()
+            .unwrap_or(&empty_vec)
+            .iter()
+            .find(|s| s.get("name").and_then(|n| n.as_str()) == Some(student_name));
+
+        // 获取学生的content
+        let content = student_info
+            .and_then(|s| s.get("content"))
+            .and_then(|c| c.as_str())
+            .unwrap_or_default();
         format!(
-            "你是来自蔚蓝档案的学生{}，你应该表现得符合角色特性。\n\
-            你需要保持角色的一致性，友好地与用户交流。\n\
-            在对话中要展现出{}的性格特点和说话方式。\n\
-            请记住，你是在与用户私聊，要有亲切感。",
-            student_name, student_name
+            "基于以下检索到的关于{}的信息，请以{}的视角回答问题:\n
+            {}\n
+            请记住以下几点:\n
+            1. 完全沉浸在{}的角色中，使用她的说话方式\n
+            2. 不要提及'根据检索信息'或'作为{}'等提示词\n
+            3. 保持对话的轻松自然，就像玩家真的在和{}对话\n
+            4. 请用中文回答用户的问题，可以适当使用日语的语气词，但对话主体得使用中文回答\n,
+            5. 设定中不存在魔法师，不要使用任何魔法师的设定\n",
+            student_name, student_name, content, student_name, student_name, student_name
         )
     };
 
     // 导入每个学生并创建对应私聊
-    if let Some(students) = data.get("data").and_then(|d| d.as_array()) {
+    if let Some(students) = student_data.as_array() {
         for student_data in students {
-            let student_name = student_data["PersonalName"]
+            let student_name = student_data["personalName"]
                 .as_str()
                 .unwrap_or_default()
                 .to_string();
-            let student_id = student_data["Id"].as_u64().unwrap_or_default().to_string();
+            let student_id = student_data["id"].as_u64().unwrap_or_default().to_string();
             println!("正在导入学生 {}...", &student_id);
             let avatar_url = format!(
                 "https://aronacdn.hanasaki.tech/images/student/icon/{}.webp",

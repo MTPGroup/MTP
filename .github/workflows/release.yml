@@ -12,6 +12,7 @@ jobs:
       changelog: ${{ steps.release-drafter.outputs.body }}
     permissions:
       contents: write
+      pull-requests: read
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4

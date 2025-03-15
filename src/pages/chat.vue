@@ -22,7 +22,7 @@ definePageMeta({
 <template>
   <ResizablePanelGroup direction="horizontal">
     <ResizablePanel :default-size="28" class="max-w-80 min-w-40">
-      <div class="flex flex-col h-full bg-blue-200 pt-7">
+      <div class="flex flex-col h-full bg-theme-200 pt-7">
         <!-- Chat Sidebar top -->
         <div class="flex items-center justify-between px-2 pb-3">
           <ISearchbar />
@@ -30,7 +30,11 @@ definePageMeta({
           <div class="pr-2">
             <Dialog v-model:open="dialogOpen">
               <DialogTrigger as-child>
-                <Button variant="secondary" size="icon" class="size-7">
+                <Button
+                  variant="secondary"
+                  size="icon"
+                  class="size-7 bg-theme-400"
+                >
                   <Icon
                     icon="tdesign:chat-bubble-add"
                     class="size-7 text-muted-foreground"
@@ -63,7 +67,7 @@ definePageMeta({
           </div>
         </div>
         <!-- Chat Sidebar main -->
-        <ScrollArea class="flex-1 bg-blue-50">
+        <ScrollArea class="flex-1 bg-theme-200">
           <div class="flex flex-col">
             <div
               v-for="(conversation, index) in currentConversations"
@@ -81,8 +85,10 @@ definePageMeta({
       <NuxtPage v-if="activeId" />
       <div
         v-else
-        class="flex w-full h-full items-center justify-center bg-blue-300"
-      ></div>
+        class="flex w-full h-full items-center justify-center bg-theme-100"
+      >
+        <Icon icon="icon-park-solid:peach" class="size-24 text-icon" />
+      </div>
     </ResizablePanel>
   </ResizablePanelGroup>
 </template>

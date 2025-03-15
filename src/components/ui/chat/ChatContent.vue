@@ -29,7 +29,7 @@ const md = new MarkdownIt({
     if (lang && hljs.getLanguage(lang)) {
       try {
         return hljs.highlight(str, { language: lang }).value
-      } catch (__) { }
+      } catch (__) {}
     }
     return '' // 使用默认转义
   },
@@ -54,12 +54,17 @@ const studentAvatar = computed(() => {
 </script>
 
 <template>
-  <div class="flex w-full gap-3 rounded-lg" :class="{
-    'justify-end': isUser,
-  }">
+  <div
+    class="flex w-full gap-3 rounded-lg"
+    :class="{
+      'justify-end': isUser,
+    }"
+  >
     <!-- 学生的头像显示在左侧 -->
     <div v-if="!isUser" class="flex-shrink-0">
-      <div class="size-10 rounded-full bg-blue-200 overflow-hidden flex items-center justify-center">
+      <div
+        class="size-10 rounded-full bg-theme-200 overflow-hidden flex items-center justify-center"
+      >
         <Avatar>
           <AvatarImage :src="studentAvatar" />
           <AvatarFallback>Avatar</AvatarFallback>
@@ -68,16 +73,23 @@ const studentAvatar = computed(() => {
     </div>
 
     <!-- 消息内容 -->
-    <div class="py-2 px-3 rounded-lg max-w-[85%] transition-all duration-300 markdown-content" :class="{
-    'animate-pulse': isLoading,
-    'bg-white text-gray-900': !isUser,
-    'bg-blue-500 text-white': isUser,
-    'opacity-70': isLoading,
-  }">
+    <div
+      class="py-2 px-3 rounded-lg max-w-[85%] transition-all duration-300 markdown-content"
+      :class="{
+        'animate-pulse': isLoading,
+        'bg-white text-gray-900': !isUser,
+        'bg-theme-700 text-white': isUser,
+        'opacity-70': isLoading,
+      }"
+    >
       <p class="whitespace-pre-wrap break-words" v-if="isLoading">
         <span class="inline-block animate-bounce">.</span>
-        <span class="inline-block animate-bounce" style="animation-delay: 0.2s">.</span>
-        <span class="inline-block animate-bounce" style="animation-delay: 0.4s">.</span>
+        <span class="inline-block animate-bounce" style="animation-delay: 0.2s"
+          >.</span
+        >
+        <span class="inline-block animate-bounce" style="animation-delay: 0.4s"
+          >.</span
+        >
       </p>
       <!-- 使用v-html渲染Markdown -->
       <div v-else v-html="renderedContent" class="markdown-body"></div>
@@ -85,7 +97,9 @@ const studentAvatar = computed(() => {
 
     <!-- 用户消息的头像显示在右侧 -->
     <div v-if="isUser" class="flex-shrink-0">
-      <div class="size-10 rounded-full bg-blue-100 overflow-hidden flex items-center justify-center">
+      <div
+        class="size-10 rounded-full bg-theme-100 overflow-hidden flex items-center justify-center"
+      >
         <Avatar>
           <AvatarImage :src="studentAvatar" />
           <AvatarFallback>Avatar</AvatarFallback>

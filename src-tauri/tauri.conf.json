@@ -15,7 +15,10 @@
         "title": "mtp-tauri",
         "width": 960,
         "height": 654,
-        "decorations": false
+        "decorations": false,
+        "windowEffects": {
+          "effects": ["acrylic"]
+        }
       }
     ],
     "security": {

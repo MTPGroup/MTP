@@ -19,30 +19,44 @@
     --border: 0 0% 89.8%;
     --input: 0 0% 89.8%;
 
-    --primary: 0 0% 9%;
-    --primary-foreground: 0 0% 98%;
+    --primary: 343.78 60.66% 84%;
+    --primary-foreground: 0 0% 20%;
 
-    --secondary: 0 0% 96.1%;
-    --secondary-foreground: 0 0% 9%;
+    --secondary: 345 30% 96%;
+    --secondary-foreground: 340 40% 40%;
 
-    --accent: 0 0% 96.1%;
-    --accent-foreground: 0 0% 9%;
+    --accent: 350 40% 96.1%;
+    --accent-foreground: 340 50% 40%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
 
-    --ring: 0 0% 3.9%;
+    --ring: 343.78 60.66% 84%;
 
     --radius: 0.5rem;
 
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
+    /* 主题颜色 */
+    --theme-50: 350 100% 96%;
+    --theme-100: 350 80% 94%;
+    --theme-200: 350 70% 92%;
+    --theme-300: 350 60% 90%;
+    --theme-400: 350 60% 87%;
+    --theme-500: 343.78 60.66% 84%;
+    --theme-600: 340 55% 78%;
+    --theme-700: 335 50% 72%;
+    --theme-800: 330 45% 65%;
+    --theme-900: 325 40% 55%;
+
+    --icon: 220 14.29% 95.88%;
+
+    --sidebar-background: 210 100% 97%;
+    --sidebar-foreground: 210 50% 30%;
+    --sidebar-primary: 210 100% 40%;
     --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-accent: 210 100% 95%;
+    --sidebar-accent-foreground: 210 100% 30%;
+    --sidebar-border: 210 30% 92%;
+    --sidebar-ring: 210 100% 50%;
     --chart-1: 12 76% 61%;
     --chart-2: 173 58% 39%;
     --chart-3: 197 37% 24%;
@@ -51,43 +65,57 @@
   }
 
   .dark {
-    --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
+    --background: 210 30% 10%;
+    --foreground: 210 10% 98%;
 
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
+    --muted: 210 30% 20%;
+    --muted-foreground: 210 10% 70%;
 
-    --popover: 0 0% 3.9%;
-    --popover-foreground: 0 0% 98%;
+    --popover: 210 30% 10%;
+    --popover-foreground: 210 10% 98%;
 
-    --card: 0 0% 3.9%;
-    --card-foreground: 0 0% 98%;
+    --card: 210 30% 12%;
+    --card-foreground: 210 10% 98%;
 
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
+    --border: 210 30% 20%;
+    --input: 210 30% 20%;
 
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 9%;
+    --primary: 210 100% 60%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 0 0% 14.9%;
-    --secondary-foreground: 0 0% 98%;
+    --secondary: 210 30% 20%;
+    --secondary-foreground: 210 10% 98%;
 
-    --accent: 0 0% 14.9%;
-    --accent-foreground: 0 0% 98%;
+    --accent: 210 30% 20%;
+    --accent-foreground: 210 10% 98%;
 
-    --destructive: 0 62.8% 30.6%;
+    --destructive: 0 70% 45%;
     --destructive-foreground: 0 0% 98%;
 
-    --ring: 0 0% 83.1%;
+    --ring: 210 100% 60%;
 
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
+    /* 暗色主题颜色 - 蓝色系 */
+    --theme-50: 210 30% 15%;
+    --theme-100: 210 35% 20%;
+    --theme-200: 210 40% 25%;
+    --theme-300: 210 45% 30%;
+    --theme-400: 210 50% 40%;
+    --theme-500: 210 60% 50%;
+    --theme-600: 210 70% 60%;
+    --theme-700: 210 80% 70%;
+    --theme-800: 210 90% 80%;
+    --theme-900: 210 100% 90%;
+
+    --icon: 215 27.91% 16.86%;
+
+    --sidebar-background: 210 30% 15%;
+    --sidebar-foreground: 210 10% 90%;
+    --sidebar-primary: 210 100% 60%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-accent: 210 30% 20%;
+    --sidebar-accent-foreground: 210 10% 90%;
+    --sidebar-border: 210 30% 25%;
+    --sidebar-ring: 210 100% 60%;
     --chart-1: 220 70% 50%;
     --chart-2: 160 60% 45%;
     --chart-3: 30 80% 55%;
@@ -100,9 +128,11 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }
+
   .titlebar-button {
     display: inline-flex;
     justify-content: center;
@@ -112,9 +142,11 @@
     user-select: none;
     -webkit-user-select: none;
   }
+
   .titlebar-button:hover {
-    @apply bg-blue-50/20
+    @apply bg-theme-400;
   }
+
   /* 添加Markdown样式 */
   .markdown-body {
     line-height: 1.5;
@@ -149,11 +181,13 @@
     font-weight: bold;
     margin: 0.5rem 0;
   }
+
   .markdown-body h2 {
     font-size: 1.25rem;
     font-weight: bold;
     margin: 0.5rem 0;
   }
+
   .markdown-body h3 {
     font-size: 1.125rem;
     font-weight: bold;
@@ -167,7 +201,7 @@
   }
 
   /* 用户消息中的链接样式 */
-  .bg-blue-500 .markdown-body a {
+  .bg-theme-500 .markdown-body a {
     color: #eff6ff;
     text-decoration: underline;
   }
@@ -178,6 +212,7 @@
     margin: 0.5rem 0;
     width: 100%;
   }
+
   .markdown-body th,
   .markdown-body td {
     border: 1px solid #e5e7eb;
@@ -198,30 +233,34 @@
 
   .markdown-body ul {
     padding-left: 1.5rem;
-    list-style-type: disc; /* 添加小圆点 */
+    list-style-type: disc;
+    /* 添加小圆点 */
   }
 
   .markdown-body ol {
     padding-left: 1.5rem;
-    list-style-type: decimal; /* 添加数字 */
+    list-style-type: decimal;
+    /* 添加数字 */
   }
 
   /* 嵌套列表样式 */
   .markdown-body ul ul {
-    list-style-type: circle; /* 二级列表使用空心圆 */
+    list-style-type: circle;
+    /* 二级列表使用空心圆 */
   }
 
   .markdown-body ul ul ul {
-    list-style-type: square; /* 三级列表使用方块 */
+    list-style-type: square;
+    /* 三级列表使用方块 */
   }
 
-  /* 确保蓝色背景下列表符号在暗背景上可见 */
-  .bg-blue-500 .markdown-body ul {
+  /* 确保主题背景下列表符号在暗背景上可见 */
+  .bg-theme-500 .markdown-body ul {
     list-style-type: disc;
   }
 
-  .bg-blue-500 .markdown-body ul li::marker,
-  .bg-blue-500 .markdown-body ol li::marker {
+  .bg-theme-500 .markdown-body ul li::marker,
+  .bg-theme-500 .markdown-body ol li::marker {
     color: rgba(255, 255, 255, 0.8);
   }
 }

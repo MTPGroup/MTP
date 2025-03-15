@@ -122,12 +122,12 @@ async function sendMessage(text: string) {
 </script>
 
 <template>
-  <div class="flex flex-col h-full bg-blue-100">
+  <div class="flex flex-col h-full bg-theme-100">
     <!-- 头部信息 -->
     <div
-      class="flex h-[68px] items-start justify-between px-4 backdrop-blur-lg bg-blue-300 pt-7"
+      class="flex h-[68px] items-start justify-between px-4 sticky top-0 z-10 backdrop-blur-lg bg-theme-400/50 pt-7 border-b border-theme-300/30 shadow-sm supports-[backdrop-filter]:bg-theme-400/20"
     >
-      <p class="text-lg">
+      <p class="text-lg cursor-default">
         {{ conversationStore.activeConversation?.title || '聊天' }}
       </p>
       <!-- 按钮组 -->

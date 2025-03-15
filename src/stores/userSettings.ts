@@ -6,9 +6,11 @@ export const useMyUserInfoStore = defineStore(
     const userName = useState(() => '')
     const userAvatar = useState<string>(() => '')
     const apiKey = useState(() => '')
+    const theme = useState<'light' | 'dark' | 'system'>('system')
 
     const loadUserSettings = async () => {
       const store = await Store.load('settings.json')
+      theme.value = (await store.get('theme')) ?? 'system'
       apiKey.value = (await store.get('api_key')) ?? ''
       userName.value = (await store.get('username')) ?? 'Sensei'
       userAvatar.value =
@@ -29,6 +31,7 @@ export const useMyUserInfoStore = defineStore(
       userName,
       userAvatar,
       apiKey,
+      theme,
       setUserName,
       setUserAvatar,
       loadUserSettings,

@@ -30,11 +30,18 @@ const selected = computed(
 </script>
 
 <template>
-  <div v-if="conversation" :class="`flex py-2 px-4 hover:bg-blue-200 ${selected ? 'bg-blue-200' : ''}`"
-    @click="conversationStore.setActiveConversation(conversation.id)">
+  <div
+    v-if="conversation"
+    :class="`flex py-2 px-4 hover:bg-theme-400 cursor-default ${
+      selected ? 'bg-theme-400' : 'bg-theme-200'
+    }`"
+    @click="conversationStore.setActiveConversation(conversation.id)"
+  >
     <Avatar>
       <AvatarImage :src="avatar" />
-      <AvatarFallback>{{ conversation.student?.name?.charAt(0) }}</AvatarFallback>
+      <AvatarFallback>{{
+        conversation.student?.name?.charAt(0)
+      }}</AvatarFallback>
     </Avatar>
     <div class="flex flex-col ml-2 min-w-0 flex-1">
       <h4 class="font-semibold tracking-tight">

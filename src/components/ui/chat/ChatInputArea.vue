@@ -29,32 +29,57 @@ function handleKeyDown(e: KeyboardEvent) {
 </script>
 
 <template>
-  <div class="flex flex-col h-full bg-blue-200">
+  <div
+    class="flex flex-col h-full border-t border-theme-300/30 bg-theme-400/50 backdrop-blur-lg supports-[backdrop-filter]:bg-theme-400/10"
+  >
     <div class="flex items-center justify-between px-2 pt-1">
       <div class="flex">
         <IButton>
-          <Icon icon="mingcute:emoji-line" class="size-6 text-muted-foreground" />
+          <Icon
+            icon="mingcute:emoji-line"
+            class="size-6 text-muted-foreground"
+          />
         </IButton>
         <IButton>
-          <Icon icon="mingcute:pic-2-line" class="size-6 text-muted-foreground" />
+          <Icon
+            icon="mingcute:pic-2-line"
+            class="size-6 text-muted-foreground"
+          />
         </IButton>
       </div>
       <div class="flex">
         <IButton>
-          <Icon icon="mingcute:history-anticlockwise-line" class="size-6 text-muted-foreground" />
+          <Icon
+            icon="mingcute:history-anticlockwise-line"
+            class="size-6 text-muted-foreground"
+          />
         </IButton>
       </div>
     </div>
     <div class="flex flex-col h-full">
-      <Textarea v-model="inputText"
+      <Textarea
+        v-model="inputText"
         class="flex h-full shadow-none rounded-none resize-none border-none focus:ring-0 focus:border-none focus-visible:ring-0 focus-visible:ring-offset-0"
-        @keydown="handleKeyDown"></Textarea>
+        @keydown="handleKeyDown"
+      ></Textarea>
       <div class="flex items-center justify-end p-4">
-        <Button v-if="isLoadingResponse" class="h-7 bg-blue-400 disable" @click="handleSend">
-          <Icon icon="mingcute:loading-line" class="size-6 text-white animate-spin" />
+        <Button
+          v-if="isLoadingResponse"
+          class="h-7 bg-theme-700 disable"
+          @click="handleSend"
+        >
+          <Icon
+            icon="mingcute:loading-line"
+            class="size-6 text-white animate-spin"
+          />
           ...
         </Button>
-        <Button v-else class="h-7 bg-blue-400" @click="handleSend">发送</Button>
+        <Button
+          v-else
+          class="h-7 bg-theme-600 hover:bg-theme-700"
+          @click="handleSend"
+          >发送</Button
+        >
       </div>
     </div>
   </div>

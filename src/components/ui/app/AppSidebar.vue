@@ -2,7 +2,9 @@
 import { Icon } from '@iconify/vue'
 import { listen } from '@tauri-apps/api/event'
 import { WebviewWindow } from '@tauri-apps/api/webviewWindow'
+import { tauriService } from '~/services/tauri'
 
+const colorMode = useColorMode()
 const userStore = useMyUserInfoStore()
 const avatar = computed(() => userStore.userAvatar)
 const avatarAlt = computed(() => userStore.userName.charAt(0))
@@ -14,9 +16,34 @@ onMounted(async () => {
       userStore.setUserName(value)
     } else if (type === 'avatar') {
       userStore.setUserAvatar(value)
+    } else if (type === 'theme') {
+      colorMode.preference = value
     }
   })
 })
+
+const toggleMode = async () => {
+  colorMode.preference = colorMode.preference === 'dark' ? 'light' : 'dark'
+  await tauriService.setStore('theme', colorMode.preference)
+  try {
+    const settingsWindow = await WebviewWindow.getByLabel('settings')
+    if (settingsWindow) {
+      await settingsWindow.emit('user-settings-updated', {
+        type: 'theme',
+        value: colorMode.preference,
+      })
+    }
+    const aboutWindow = await WebviewWindow.getByLabel('about')
+    if (aboutWindow) {
+      await aboutWindow.emit('user-settings-updated', {
+        type: 'theme',
+        value: colorMode.preference,
+      })
+    }
+  } catch (error) {
+    console.error('Failed to notify main window:', error)
+  }
+}
 
 const openAboutWindow = async () => {
   try {
@@ -49,7 +76,7 @@ const openSettingsWindow = async () => {
       return
     }
     // 创建一个新窗口
-    const win = new WebviewWindow('settings', {
+    new WebviewWindow('settings', {
       title: '设置',
       url: `/settings`,
       width: 833,
@@ -75,7 +102,7 @@ const closeWindow = async () => {
 <template>
   <!-- 图标栏 -->
   <div
-    class="flex flex-col w-16 h-full p-2 items-center justify-start bg-blue-300"
+    class="flex flex-col w-16 h-full p-2 items-center justify-start bg-theme-300"
   >
     <div class="flex flex-col items-center justify-start flex-grow">
       <p class="pt-2 pb-4">MTP</p>
@@ -86,10 +113,10 @@ const closeWindow = async () => {
       <DropdownMenu>
         <DropdownMenuTrigger>
           <div class="flex flex-col items-center justify-center py-2">
-            <IButton class="rounded-sm hover:bg-secondary">
+            <IButton class="rounded-sm hover:bg-theme-400">
               <Icon
                 icon="solar:hamburger-menu-broken"
-                class="size-6 text-primary"
+                class="size-6 text-black"
               />
             </IButton>
           </div>
@@ -120,9 +147,16 @@ const closeWindow = async () => {
               <span>设置</span>
             </DropdownMenuItem>
 
-            <DropdownMenuItem>
-              <Icon icon="lucide:moon" class="mr-2 h-4 w-4" />
-              <span>深色模式</span>
+            <DropdownMenuItem @click="toggleMode">
+              <Icon
+                :icon="
+                  colorMode.value === 'dark' ? 'lucide:sun' : 'lucide:moon'
+                "
+                class="mr-2 h-4 w-4"
+              />
+              <span>{{
+                colorMode.value === 'dark' ? '浅色模式' : '深色模式'
+              }}</span>
             </DropdownMenuItem>
 
             <DropdownMenuItem @click="openAboutWindow">

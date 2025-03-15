@@ -1,9 +1,21 @@
 <script lang="ts" setup>
 import { Icon } from '@iconify/vue'
+import { listen } from '@tauri-apps/api/event'
 import { WebviewWindow } from '@tauri-apps/api/webviewWindow'
 
 definePageMeta({
   layout: 'child-window',
+})
+
+const colorMode = useColorMode()
+
+onMounted(async () => {
+  await listen('user-settings-updated', (event) => {
+    const { type, value } = event.payload as { type: string; value: string }
+    if (type === 'theme') {
+      colorMode.preference = value
+    }
+  })
 })
 
 const closeAboutWindow = async () => {
@@ -17,18 +29,18 @@ const closeAboutWindow = async () => {
 
 <template>
   <div
-    class="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-blue-100 to-blue-200"
+    class="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-theme-100 to-theme-200"
   >
     <div
       class="w-full max-w-lg h-full bg-white rounded-md shadow-lg overflow-hidden"
     >
       <!-- 头部Logo区域 -->
-      <div class="relative bg-blue-500 py-8 px-6 text-center">
+      <div class="relative bg-theme-500 py-8 px-6 text-center">
         <div class="absolute top-0 right-0 p-2">
           <Button
             variant="ghost"
             size="icon"
-            class="h-8 w-8 text-blue-50 hover:bg-blue-400 hover:text-white"
+            class="h-8 w-8 text-theme-50 hover:bg-theme-400 hover:text-white"
             @click="closeAboutWindow"
           >
             <Icon icon="lucide:x" class="h-4 w-4" />
@@ -47,7 +59,7 @@ const closeAboutWindow = async () => {
           </div>
         </div>
         <h1 class="text-2xl font-bold text-white">MomoTalk Plus</h1>
-        <p class="text-blue-100 text-sm mt-1">版本 1.0.0</p>
+        <p class="text-theme-100 text-sm mt-1">版本 1.0.0</p>
       </div>
 
       <!-- 内容区域 -->
@@ -71,37 +83,37 @@ const closeAboutWindow = async () => {
             </h2>
             <div class="grid grid-cols-3 gap-2 text-center">
               <div
-                class="p-2 rounded-md bg-gray-50 hover:bg-blue-50 transition-colors"
+                class="p-2 rounded-md bg-gray-50 hover:bg-theme-50 transition-colors"
               >
                 <Icon icon="logos:nuxt-icon" class="size-10 mx-auto" />
                 <p class="text-sm mt-1">Nuxt 3</p>
               </div>
               <div
-                class="p-2 rounded-md bg-gray-50 hover:bg-blue-50 transition-colors"
+                class="p-2 rounded-md bg-gray-50 hover:bg-theme-50 transition-colors"
               >
                 <Icon icon="logos:rust" class="size-10 mx-auto" />
                 <p class="text-sm mt-1">Rust</p>
               </div>
               <div
-                class="p-2 rounded-md bg-gray-50 hover:bg-blue-50 transition-colors"
+                class="p-2 rounded-md bg-gray-50 hover:bg-theme-50 transition-colors"
               >
                 <Icon icon="logos:typescript-icon" class="size-10 mx-auto" />
                 <p class="text-sm mt-1">TypeScript</p>
               </div>
               <div
-                class="p-2 rounded-md bg-gray-50 hover:bg-blue-50 transition-colors"
+                class="p-2 rounded-md bg-gray-50 hover:bg-theme-50 transition-colors"
               >
                 <Icon icon="logos:tailwindcss-icon" class="size-10 mx-auto" />
                 <p class="text-sm mt-1">Tailwind CSS</p>
               </div>
               <div
-                class="p-2 rounded-md bg-gray-50 hover:bg-blue-50 transition-colors"
+                class="p-2 rounded-md bg-gray-50 hover:bg-theme-50 transition-colors"
               >
                 <Icon icon="logos:tauri" class="size-10 mx-auto" />
                 <p class="text-sm mt-1">Tauri</p>
               </div>
               <div
-                class="p-2 rounded-md bg-gray-50 hover:bg-blue-50 transition-colors"
+                class="p-2 rounded-md bg-gray-50 hover:bg-theme-50 transition-colors"
               >
                 <Icon icon="simple-icons:openai" class="size-10 mx-auto" />
                 <p class="text-sm mt-1">AI Integration</p>
@@ -115,14 +127,14 @@ const closeAboutWindow = async () => {
               开发团队
             </h2>
             <div class="flex items-center space-x-3 my-3">
-              <Avatar class="size-12 shadow-md border border-blue-300">
+              <Avatar class="size-12 shadow-md border border-theme-300">
                 <AvatarImage
                   src="https://cravatar.cn/avatar/2652ab380725cbe9e65da5222a7a9efe"
                 />
                 <AvatarFallback>S</AvatarFallback>
               </Avatar>
               <div>
-                <p class="font-medium">hanasaki</p>
+                <p class="font-medium text-black">hanasaki</p>
                 <p class="text-sm text-gray-500">主要开发者</p>
               </div>
             </div>
@@ -134,7 +146,7 @@ const closeAboutWindow = async () => {
               <Tooltip>
                 <TooltipTrigger>
                   <NuxtLink
-                    to="https://github.com/hanasa2023/MTP"
+                    to="https://github.com/MTPGroup/MTP"
                     target="_blank"
                   >
                     <Button variant="outline" class="group">
@@ -157,7 +169,7 @@ const closeAboutWindow = async () => {
                   <Button variant="outline" class="group">
                     <Icon
                       icon="lucide:book-open"
-                      class="mr-2 h-4 w-4 group-hover:text-blue-500"
+                      class="mr-2 h-4 w-4 group-hover:text-theme-500"
                     />
                     <span>文档</span>
                   </Button>
@@ -174,7 +186,7 @@ const closeAboutWindow = async () => {
       <!-- 底部 -->
       <div class="bg-gray-50 py-3 px-6 text-center border-t">
         <p class="text-xs text-gray-500">
-          © 2025-{{ new Date().getFullYear() }} MomoTalk Plus. 保留所有权利。
+          © {{ new Date().getFullYear() }} MomoTalk Plus. 保留所有权利。
         </p>
       </div>
     </div>

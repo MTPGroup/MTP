@@ -1,16 +1,27 @@
 <script setup lang="ts">
 import { Icon } from '@iconify/vue'
+import { listen } from '@tauri-apps/api/event'
 import { WebviewWindow } from '@tauri-apps/api/webviewWindow'
-import { ref } from 'vue'
 import { tauriService } from '~/services/tauri'
 import { useMyUserInfoStore } from '~/stores/userSettings'
 import { useToast } from '../toast'
 
 const { toast } = useToast()
+const colorMode = useColorMode()
 const userStore = useMyUserInfoStore()
 const username = useState(() => userStore.userName)
 const apiKey = useState(() => userStore.apiKey)
-const showApiKey = ref(false)
+const showApiKey = useState(() => false)
+const currentTheme = computed(() => userStore.theme)
+
+onMounted(async () => {
+  await listen('user-settings-updated', (event) => {
+    const { type, value } = event.payload as { type: string; value: string }
+    if (type === 'theme') {
+      colorMode.preference = value
+    }
+  })
+})
 
 const saveUsername = async () => {
   console.log('Saving username:', username.value)
@@ -90,21 +101,29 @@ const themeOptions = [
   },
 ]
 
-const currentTheme = useState('theme', () => 'system')
+const setTheme = async (theme: string) => {
+  colorMode.preference = theme
+  userStore.theme = theme as 'light' | 'dark' | 'system'
+  await tauriService.setStore('theme', theme)
 
-const setTheme = (theme: string) => {
-  currentTheme.value = theme
-  // 保存主题设置到配置文件或localStorage
-  localStorage.setItem('theme', theme)
-  // 应用主题
-  document.documentElement.setAttribute(
-    'data-theme',
-    theme === 'system'
-      ? window.matchMedia('(prefers-color-scheme: dark)').matches
-        ? 'dark'
-        : 'light'
-      : theme
-  )
+  try {
+    const mainWindow = await WebviewWindow.getByLabel('main')
+    if (mainWindow) {
+      await mainWindow.emit('user-settings-updated', {
+        type: 'theme',
+        value: theme,
+      })
+    }
+    const aboutWindow = await WebviewWindow.getByLabel('about')
+    if (aboutWindow) {
+      await aboutWindow.emit('user-settings-updated', {
+        type: 'theme',
+        value: theme,
+      })
+    }
+  } catch (error) {
+    console.error('Failed to notify main window:', error)
+  }
 }
 </script>
 
@@ -137,7 +156,7 @@ const setTheme = (theme: string) => {
 
       <!-- API Key设置 -->
       <div class="space-y-6">
-        <h3 class="text-lg font-medium px-2">API设置</h3>
+        <h3 class="text-lg font-medium px-2 pt-4">API设置</h3>
 
         <Card>
           <CardContent class="px-4 py-6">

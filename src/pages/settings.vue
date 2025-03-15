@@ -23,7 +23,7 @@ const closeSettingsWindow = async () => {
     <div class="flex"></div>
     <ResizablePanelGroup direction="horizontal">
       <ResizablePanel :default-size="28" class="max-w-80 min-w-40">
-        <div class="flex flex-col h-full bg-blue-100 p-2">
+        <div class="flex flex-col h-full bg-theme-100 p-2">
           <SettingsListItem
             v-for="item in selectItems"
             :key="item.value"
@@ -35,12 +35,12 @@ const closeSettingsWindow = async () => {
       </ResizablePanel>
       <ResizableHandle />
       <ResizablePanel :default-size="72">
-        <div class="relative flex h-full bg-blue-50">
+        <div class="relative flex h-full bg-theme-50">
           <div class="absolute top-0 right-0">
             <Button
               variant="ghost"
               size="icon"
-              class="text-black hover:bg-blue-100"
+              class="text-black hover:bg-theme-100"
               @click="closeSettingsWindow"
             >
               <Icon icon="lucide:x" class="h-4 w-4" />

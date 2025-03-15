@@ -1,6 +1,8 @@
-import { toast } from '~/components/ui/toast'
+import { useToast } from '~/components/ui/toast'
 
 export default defineNuxtRouteMiddleware(async () => {
+  const colorMode = useColorMode()
+  const { toast } = useToast()
   const userStore = useMyUserInfoStore()
 
   await userStore.loadUserSettings()
@@ -12,4 +14,5 @@ export default defineNuxtRouteMiddleware(async () => {
       duration: 5000,
     })
   }
+  colorMode.preference = userStore.theme
 })

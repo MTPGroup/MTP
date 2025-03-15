@@ -29,7 +29,7 @@ function handleSelect(item: any) {
     <ComboboxAnchor>
       <div class="relative flex w-full px-2">
         <ComboboxInput
-          class="pl-7 h-7 bg-secondary"
+          class="pl-7 h-7 bg-theme-400 border-0"
           :display-value="(val: any) => val?.label ?? ''"
           placeholder="搜索联系人..."
         />

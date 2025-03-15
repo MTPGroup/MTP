@@ -2,7 +2,7 @@
 
 ![MTP Logo](./src-tauri/icon.png)
 
-MomoTalk Plus (MTP) 是一款基于 Tauri + Nuxt 3 + TypeScript 开发的 BA 学生扮演聊天软件。本项目使用现代化的技术栈，提供了流畅的桌面应用体验。
+MomoTalk Plus (MTP) 是一款基于 Tauri 2 + Nuxt 3 + TypeScript 开发的 BA 学生扮演聊天软件。本项目使用现代化的技术栈，提供了流畅的桌面应用体验。
 
 ## 项目简介
 
@@ -12,12 +12,20 @@ MomoTalk Plus 是一款模拟游戏《蔚蓝档案》(Blue Archive) 中通讯软
 
 - **角色扮演聊天**：与游戏中的学生角色进行对话互动
 - **多窗口支持**：主界面、设置、关于等多窗口管理
-- **本地 LLM 集成**：使用 LangChain 框架集成大语言模型
 - **数据持久化**：使用 SQLite 数据库存储聊天记录和用户数据
 - **现代化 UI**：基于 Shadcn UI 和 Tailwind CSS 的美观界面
 - **跨平台支持**：支持 Windows、macOS 和 Linux 系统
 
+## 计划中
+
+[ ] 支持`open ai`、`qwen`、`qwq`等 api
+[ ] 重构暗色主题
+[ ] 支持 Android、ios、ipad os 等移动端系统
+
 ## 安装与使用
+
+> [!Caution]
+> 目前只支持 ds 官方 api
 
 ### 环境要求
 
@@ -27,30 +35,7 @@ MomoTalk Plus 是一款模拟游戏《蔚蓝档案》(Blue Archive) 中通讯软
 
 ### 安装步骤
 
-1. 克隆仓库
-
-```bash
-git clone https://github.com/MTPGroup/MTP.git
-cd MTP
-```
-
-2. 安装依赖
-
-```bash
-yarn install
-```
-
-3. 开发模式运行
-
-```bash
-yarn tauri dev
-```
-
-4. 构建应用
-
-```bash
-yarn tauri build
-```
+从 `release` 内下载对应版本的安装包安装即可
 
 ## 技术架构
 
@@ -86,6 +71,33 @@ yarn tauri build
 ```
 
 ## 开发指南
+
+### 开发步骤
+
+1. 克隆仓库
+
+```bash
+git clone https://github.com/MTPGroup/MTP.git
+cd MTP
+```
+
+2. 安装依赖
+
+```bash
+yarn install
+```
+
+3. 开发模式运行
+
+```bash
+yarn tauri dev
+```
+
+4. 构建应用
+
+```bash
+yarn tauri build
+```
 
 ### 推荐的 IDE 设置
 

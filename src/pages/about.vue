@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import {Icon} from '@iconify/vue'
-import {WebviewWindow} from "@tauri-apps/api/webviewWindow";
+import { Icon } from '@iconify/vue'
+import { WebviewWindow } from '@tauri-apps/api/webviewWindow'
 
 definePageMeta({
   layout: 'child-window',
@@ -17,14 +17,14 @@ const closeAboutWindow = async () => {
 
 <template>
   <div
-      class="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-blue-100 to-blue-200"
+    class="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-blue-100 to-blue-200"
   >
     <div
-        class="w-full max-w-lg h-full bg-white rounded-md shadow-lg overflow-hidden"
+      class="w-full max-w-lg h-full bg-white rounded-md shadow-lg overflow-hidden"
     >
       <!-- 头部Logo区域 -->
       <div class="relative bg-blue-500 py-8 px-6 text-center">
-         <div class="absolute top-0 right-0 p-2">
+        <div class="absolute top-0 right-0 p-2">
           <Button
             variant="ghost"
             size="icon"
@@ -37,12 +37,12 @@ const closeAboutWindow = async () => {
 
         <div class="mb-3">
           <div
-              class="size-24 mx-auto bg-white rounded-full flex items-center justify-center shadow-md"
+            class="size-24 mx-auto bg-white rounded-full flex items-center justify-center shadow-md"
           >
             <img
-                src="../assets/logo.png"
-                alt="MTP Logo"
-                class="size-20 mx-auto bg-white rounded-full flex items-center justify-center shadow-md"
+              src="../assets/logo.png"
+              alt="MTP Logo"
+              class="size-20 mx-auto bg-white rounded-full flex items-center justify-center shadow-md"
             />
           </div>
         </div>
@@ -71,39 +71,39 @@ const closeAboutWindow = async () => {
             </h2>
             <div class="grid grid-cols-3 gap-2 text-center">
               <div
-                  class="p-2 rounded-md bg-gray-50 hover:bg-blue-50 transition-colors"
+                class="p-2 rounded-md bg-gray-50 hover:bg-blue-50 transition-colors"
               >
-                <Icon icon="logos:nuxt-icon" class="size-10 mx-auto"/>
+                <Icon icon="logos:nuxt-icon" class="size-10 mx-auto" />
                 <p class="text-sm mt-1">Nuxt 3</p>
               </div>
               <div
-                  class="p-2 rounded-md bg-gray-50 hover:bg-blue-50 transition-colors"
+                class="p-2 rounded-md bg-gray-50 hover:bg-blue-50 transition-colors"
               >
-                <Icon icon="logos:vue" class="size-10 mx-auto"/>
-                <p class="text-sm mt-1">Vue 3</p>
+                <Icon icon="logos:rust" class="size-10 mx-auto" />
+                <p class="text-sm mt-1">Rust</p>
               </div>
               <div
-                  class="p-2 rounded-md bg-gray-50 hover:bg-blue-50 transition-colors"
+                class="p-2 rounded-md bg-gray-50 hover:bg-blue-50 transition-colors"
               >
-                <Icon icon="logos:typescript-icon" class="size-10 mx-auto"/>
+                <Icon icon="logos:typescript-icon" class="size-10 mx-auto" />
                 <p class="text-sm mt-1">TypeScript</p>
               </div>
               <div
-                  class="p-2 rounded-md bg-gray-50 hover:bg-blue-50 transition-colors"
+                class="p-2 rounded-md bg-gray-50 hover:bg-blue-50 transition-colors"
               >
-                <Icon icon="logos:tailwindcss-icon" class="size-10 mx-auto"/>
+                <Icon icon="logos:tailwindcss-icon" class="size-10 mx-auto" />
                 <p class="text-sm mt-1">Tailwind CSS</p>
               </div>
               <div
-                  class="p-2 rounded-md bg-gray-50 hover:bg-blue-50 transition-colors"
+                class="p-2 rounded-md bg-gray-50 hover:bg-blue-50 transition-colors"
               >
-                <Icon icon="logos:electron" class="size-10 mx-auto"/>
-                <p class="text-sm mt-1">Electron</p>
+                <Icon icon="logos:tauri" class="size-10 mx-auto" />
+                <p class="text-sm mt-1">Tauri</p>
               </div>
               <div
-                  class="p-2 rounded-md bg-gray-50 hover:bg-blue-50 transition-colors"
+                class="p-2 rounded-md bg-gray-50 hover:bg-blue-50 transition-colors"
               >
-                <Icon icon="simple-icons:openai" class="size-10 mx-auto"/>
+                <Icon icon="simple-icons:openai" class="size-10 mx-auto" />
                 <p class="text-sm mt-1">AI Integration</p>
               </div>
             </div>
@@ -117,7 +117,7 @@ const closeAboutWindow = async () => {
             <div class="flex items-center space-x-3 my-3">
               <Avatar class="size-12 shadow-md border border-blue-300">
                 <AvatarImage
-                    src="https://cravatar.cn/avatar/2652ab380725cbe9e65da5222a7a9efe"
+                  src="https://cravatar.cn/avatar/2652ab380725cbe9e65da5222a7a9efe"
                 />
                 <AvatarFallback>S</AvatarFallback>
               </Avatar>
@@ -134,13 +134,13 @@ const closeAboutWindow = async () => {
               <Tooltip>
                 <TooltipTrigger>
                   <NuxtLink
-                      to="https://github.com/hanasa2023/MTP"
-                      target="_blank"
+                    to="https://github.com/hanasa2023/MTP"
+                    target="_blank"
                   >
                     <Button variant="outline" class="group">
                       <Icon
-                          icon="lucide:github"
-                          class="mr-2 h-4 w-4 group-hover:text-black"
+                        icon="lucide:github"
+                        class="mr-2 h-4 w-4 group-hover:text-black"
                       />
                       <span>GitHub</span>
                     </Button>
@@ -156,8 +156,8 @@ const closeAboutWindow = async () => {
                 <TooltipTrigger>
                   <Button variant="outline" class="group">
                     <Icon
-                        icon="lucide:book-open"
-                        class="mr-2 h-4 w-4 group-hover:text-blue-500"
+                      icon="lucide:book-open"
+                      class="mr-2 h-4 w-4 group-hover:text-blue-500"
                     />
                     <span>文档</span>
                   </Button>

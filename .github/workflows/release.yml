@@ -6,25 +6,36 @@ on:
       - 'v*.*.*'
 
 jobs:
-  changelog:
-    runs-on: ubuntu-latest
-    outputs:
-      changelog: ${{ steps.release-drafter.outputs.body }}
-    permissions:
-      contents: write
-      pull-requests: read
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+  # changelog:
+  #   runs-on: ubuntu-latest
+  #   outputs:
+  #     changelog: ${{ steps.release-drafter.outputs.body }}
+  #   permissions:
+  #     contents: write
+  #     pull-requests: read
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v4
 
-      - name: Release changelog
-        id: release-drafter
-        uses: release-drafter/release-drafter@v6
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #     - name: Release changelog
+  #       id: release-drafter
+  #       uses: release-drafter/release-drafter@v6
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  #     - name: Ensure non-empty changelog
+  #       id: final-changelog
+  #       run: |
+  #         CHANGELOG="${{ steps.release-drafter.outputs.body }}"
+  #         if [ -z "$CHANGELOG" ]; then
+  #           CHANGELOG="## 🚀 新版本发布\n\n此版本包含各种改进和错误修复。"
+  #         fi
+  #         echo "changelog<<EOF" >> $GITHUB_OUTPUT
+  #         echo "$CHANGELOG" >> $GITHUB_OUTPUT
+  #         echo "EOF" >> $GITHUB_OUTPUT
 
   publish-tauri:
-    needs: changelog
+    # needs: changelog
     permissions:
       contents: write
     strategy:
@@ -69,7 +80,7 @@ jobs:
         with:
           tagName: v__VERSION__
           releaseName: 'MTP v__VERSION__'
-          releaseBody: ${{ needs.changelog.outputs.changelog }}
+          # releaseBody: ${{ needs.changelog.outputs.changelog }}
           releaseDraft: true
           prerelease: false
           args: ${{ matrix.args }}

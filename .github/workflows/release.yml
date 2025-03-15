@@ -1,29 +1,27 @@
-name: 'publish'
+name: Release
 
 on:
   push:
     tags:
       - 'v*.*.*'
+  workflow_dispatch:
 
 jobs:
   changelog:
     runs-on: ubuntu-latest
     outputs:
       changelog: ${{ steps.release-drafter.outputs.body }}
-    permissions:
-      contents: write
-      pull-requests: read
     steps:
-      - name: Checkout repository
+      - name: Check repository
         uses: actions/checkout@v4
 
-      - name: Release changelog
+      - name: Get Release Drafter
         id: release-drafter
         uses: release-drafter/release-drafter@v6
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  publish-tauri:
+  release:
     needs: changelog
     permissions:
       contents: write
@@ -55,7 +53,7 @@ jobs:
           targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
 
       - name: install dependencies (ubuntu only)
-        if: matrix.platform == 'ubuntu-22.04'
+        if: matrix.platform == 'ubuntu-22.04' # This must match the platform value defined above.
         run: |
           sudo apt-get update
           sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
@@ -68,7 +66,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tagName: v__VERSION__
-          releaseName: 'MTP v__VERSION__'
+          releaseName: MTP v__VERSION__
           releaseBody: ${{ needs.changelog.outputs.changelog }}
           releaseDraft: true
           prerelease: false

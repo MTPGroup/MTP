@@ -1,6 +1,10 @@
 # MomoTalk Plus (MTP)
 
+<div align="center">
+
 ![MTP Logo](./src-tauri/icon.png)
+
+</div>
 
 MomoTalk Plus (MTP) 是一款基于 Tauri 2 + Nuxt 3 + TypeScript 开发的 BA 学生扮演聊天软件。本项目使用现代化的技术栈，提供了流畅的桌面应用体验。
 
@@ -18,7 +22,7 @@ MomoTalk Plus 是一款模拟游戏《蔚蓝档案》(Blue Archive) 中通讯软
 
 ## 计划中
 
-[ ] 支持`open ai`、`qwen`、`qwq`等 api
+[ ] 支持`openai`、`qwen`、`qwq`等 api
 [ ] 重构暗色主题
 [ ] 支持 Android、ios、ipad os 等移动端系统
 
@@ -63,11 +67,11 @@ MomoTalk Plus 是一款模拟游戏《蔚蓝档案》(Blue Archive) 中通讯软
 │   ├── pages/            # 页面组件
 │   ├── stores/           # Pinia 状态管理
 │   └── services/         # API 服务
-├── src-tauri/            # Rust 后端代码
-│   ├── src/              # 主要源代码
-│   ├── llm/              # LLM 集成模块
-│   ├── entity/           # 数据库实体
-│   └── migration/        # 数据库迁移
+└──── src-tauri/            # Rust 后端代码
+      ├── src/              # 主要源代码
+      ├── llm/              # LLM 集成模块
+      ├── entity/           # 数据库实体
+      └── migration/        # 数据库迁移
 ```
 
 ## 开发指南

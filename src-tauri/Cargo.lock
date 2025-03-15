@@ -2697,8 +2697,8 @@ dependencies = [
 ]
 
 [[package]]
-name = "mtp-tauri"
-version = "0.1.0"
+name = "momotalk-plus"
+version = "1.0.0"
 dependencies = [
  "chrono",
  "entity",

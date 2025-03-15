@@ -33,11 +33,14 @@ use crate::model::{ChatCompletion, ChatCompletionRequest, Message, MessageData};
 /// ```
 pub async fn chat_with_ds(
     messages: Vec<MessageData>,
+    api_key: Option<String>,
 ) -> Result<Message, Box<dyn std::error::Error>> {
     let model = "deepseek-reasoner";
     let base_url = "https://api.deepseek.com/chat/completions";
-    // let api_key = env::var("DEEPSEEK_API_KEY").expect("未设置 DEEPSEEK_API_KEY 环境变量");
-    let api_key = "sk-d64e1bc13c9a4cc3b56c58ef484b8d89";
+    let api_key = match api_key {
+        Some(key) => key,
+        None => "".to_string(), // 默认 API Key
+    };
     let authorization = format!("Bearer {}", api_key);
 
     let request_body = ChatCompletionRequest {

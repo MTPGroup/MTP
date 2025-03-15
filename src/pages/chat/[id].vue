@@ -187,7 +187,9 @@ async function sendMessage(text: string) {
               class="flex flex-col gap-4"
             >
               <ChatContent
-                v-for="(message, i) in messages"
+                v-for="(message, i) in messages.filter(
+                  (msg) => msg.role === 'user' || msg.role === 'assistant'
+                )"
                 :key="i"
                 :content="message.content || ''"
                 :isUser="message.role === 'user'"

@@ -6,6 +6,10 @@ import type {
 import type { Message } from '~/models/message'
 
 export class TauriService {
+  async setStore(key: string, value: any): Promise<void> {
+    await invoke('set_store', { key, value })
+  }
+
   async getConversations(): Promise<ConversationWithStudent[]> {
     const conversations = await invoke<ConversationWithStudent[]>(
       'get_conversations'

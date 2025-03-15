@@ -7,6 +7,7 @@ mod db;
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_store::Builder::new().build())
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_os::init())
         .setup(|app| {
@@ -45,7 +46,9 @@ pub fn run() {
             commands::get_messages_by_conversation_id,
             commands::get_messages_by_conversation_id_with_pagination,
             commands::create_message,
-            commands::chat_with_llm // 添加新的聊天命令
+            commands::chat_with_llm,
+            commands::set_store,
+            commands::get_store
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

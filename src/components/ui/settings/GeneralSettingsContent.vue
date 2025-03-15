@@ -1,15 +1,20 @@
 <script setup lang="ts">
-import { useMyUserInfoStore } from '@/stores/userInfo'
 import { Icon } from '@iconify/vue'
 import { WebviewWindow } from '@tauri-apps/api/webviewWindow'
+import { ref } from 'vue'
+import { tauriService } from '~/services/tauri'
+import { useMyUserInfoStore } from '~/stores/userSettings'
 import { useToast } from '../toast'
 
 const { toast } = useToast()
 const userStore = useMyUserInfoStore()
 const username = useState(() => userStore.userName)
+const apiKey = useState(() => userStore.apiKey)
+const showApiKey = ref(false)
 
 const saveUsername = async () => {
   console.log('Saving username:', username.value)
+  await tauriService.setStore('username', username.value)
   toast({
     title: '设置已保存',
     description: '用户名已更新成功',
@@ -27,6 +32,40 @@ const saveUsername = async () => {
   } catch (error) {
     console.error('Failed to notify main window:', error)
   }
+}
+
+const saveApiKey = async () => {
+  console.log('Saving API Key')
+  await tauriService.setStore('api_key', apiKey.value)
+  toast({
+    title: '设置已保存',
+    description: 'API Key已更新成功',
+  })
+
+  try {
+    const mainWindow = await WebviewWindow.getByLabel('main')
+    if (mainWindow) {
+      await mainWindow.emit('user-settings-updated', {
+        type: 'apiKey',
+        value: apiKey.value,
+      })
+    }
+  } catch (error) {
+    console.error('Failed to notify main window:', error)
+  }
+}
+
+const toggleApiKeyVisibility = () => {
+  showApiKey.value = !showApiKey.value
+}
+
+const copyApiKey = async () => {
+  await navigator.clipboard.writeText(apiKey.value)
+  toast({
+    title: '复制成功',
+    description: 'API Key已复制到剪贴板',
+    duration: 2000,
+  })
 }
 
 // 主题设置
@@ -91,6 +130,60 @@ const setTheme = (theme: string) => {
               </div>
 
               <Button @click="saveUsername">保存</Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      <!-- API Key设置 -->
+      <div class="space-y-6">
+        <h3 class="text-lg font-medium px-2">API设置</h3>
+
+        <Card>
+          <CardContent class="px-4 py-6">
+            <div class="space-y-4">
+              <div class="space-y-2">
+                <Label for="apiKey" class="flex justify-between items-center">
+                  <span>API Key</span>
+                  <div class="flex gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      @click="toggleApiKeyVisibility"
+                      class="h-8 px-2"
+                    >
+                      <Icon
+                        :icon="showApiKey ? 'ph:eye-slash' : 'ph:eye'"
+                        class="w-4 h-4 mr-1"
+                      />
+                      {{ showApiKey ? '隐藏' : '显示' }}
+                    </Button>
+                    <Button
+                      v-if="apiKey"
+                      variant="outline"
+                      size="sm"
+                      @click="copyApiKey"
+                      class="h-8 px-2"
+                    >
+                      <Icon icon="ph:copy" class="w-4 h-4 mr-1" />
+                      复制
+                    </Button>
+                  </div>
+                </Label>
+                <div class="flex gap-2">
+                  <Input
+                    id="apiKey"
+                    v-model="apiKey"
+                    :type="showApiKey ? 'text' : 'password'"
+                    placeholder="请输入您的API Key"
+                  />
+                </div>
+                <p class="text-sm text-muted-foreground">
+                  API Key用于访问高级功能，请妥善保管
+                </p>
+              </div>
+
+              <Button @click="saveApiKey">保存</Button>
             </div>
           </CardContent>
         </Card>

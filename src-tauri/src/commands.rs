@@ -2,6 +2,35 @@ use crate::db;
 use entity::{conversation, message};
 use llm::model::MessageData;
 use tauri::State;
+use tauri_plugin_store::StoreExt;
+
+// API Key 管理命令
+#[tauri::command]
+pub async fn set_store(
+    key: String,
+    value: String,
+    app_handle: tauri::AppHandle,
+) -> Result<(), String> {
+    let store = app_handle
+        .store("settings.json")
+        .map_err(|e| e.to_string())?;
+    store.set(key, value);
+
+    Ok(())
+}
+
+#[tauri::command]
+pub async fn get_store(
+    key: String,
+    app_handle: tauri::AppHandle,
+) -> Result<Option<String>, String> {
+    let store = app_handle
+        .store("settings.json")
+        .map_err(|e| e.to_string())?;
+    let key = store.get(key);
+
+    Ok(key.and_then(|v| v.as_str().map(|s| s.to_string())))
+}
 
 // 数据库相关命令
 #[tauri::command]
@@ -98,6 +127,7 @@ pub async fn chat_with_llm(
     message: MessageData,
     conversation_id: String,
     db_client: State<'_, db::DbClient>,
+    app_handle: tauri::AppHandle,
 ) -> Result<MessageData, String> {
     // 获取对话历史
     let mut history = db::get_messages_by_conversation_id(&db_client, conversation_id.clone())
@@ -214,8 +244,12 @@ pub async fn chat_with_llm(
         .await
         .map_err(|e| e.to_string())?;
 
+    let api_key = get_store("api_key".to_string(), app_handle)
+        .await
+        .unwrap_or(None);
+
     // 调用 llm crate 中的聊天功能，使用处理后的消息列表
-    let response = match llm::chat::chat_with_ds(processed_messages).await {
+    let response = match llm::chat::chat_with_ds(processed_messages, api_key).await {
         Ok(r) => r,
         Err(e) => {
             let error_msg = format!("LLM聊天失败: {}", e);

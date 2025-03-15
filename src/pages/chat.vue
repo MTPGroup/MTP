@@ -15,7 +15,7 @@ const createNewChat = () => {
 }
 
 definePageMeta({
-  middleware: 'conversation',
+  middleware: ['conversation', 'user-settings'],
 })
 </script>
 

@@ -1,12 +1,13 @@
 <script lang="ts" setup>
-import {Icon} from "@iconify/vue";
-import {WebviewWindow} from "@tauri-apps/api/webviewWindow";
+import { Icon } from '@iconify/vue'
+import { WebviewWindow } from '@tauri-apps/api/webviewWindow'
 
 const selectItems = [{ name: '通用', value: 'General' }]
 const selected = useState(() => 'General')
 
 definePageMeta({
   layout: 'child-window',
+  middleware: 'user-settings',
 })
 const closeSettingsWindow = async () => {
   console.info('close settings window')
@@ -37,10 +38,10 @@ const closeSettingsWindow = async () => {
         <div class="relative flex h-full bg-blue-50">
           <div class="absolute top-0 right-0">
             <Button
-                variant="ghost"
-                size="icon"
-                class="text-black hover:bg-blue-100"
-                @click="closeSettingsWindow"
+              variant="ghost"
+              size="icon"
+              class="text-black hover:bg-blue-100"
+              @click="closeSettingsWindow"
             >
               <Icon icon="lucide:x" class="h-4 w-4" />
             </Button>

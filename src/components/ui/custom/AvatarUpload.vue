@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { useMyUserInfoStore } from '@/stores/userInfo'
 import { Icon } from '@iconify/vue'
 import { WebviewWindow } from '@tauri-apps/api/webviewWindow'
+import { tauriService } from '~/services/tauri'
+import { useMyUserInfoStore } from '~/stores/userSettings'
 
 const props = defineProps({
   size: {
@@ -37,6 +38,7 @@ const handleFileSelect = (event: Event) => {
     reader.onload = async (e) => {
       const result = e.target?.result as string
       avatarUrl.value = result
+      await tauriService.setStore('avatar', result)
 
       // 通知主窗口更新头像
       try {

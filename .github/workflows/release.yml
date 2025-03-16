@@ -11,17 +11,20 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       changelog: ${{ steps.release-drafter.outputs.body }}
+    permissions:
+      contents: write
+      pull-requests: read
     steps:
-      - name: Check repository
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Get Release Drafter
+      - name: Release changelog
         id: release-drafter
         uses: release-drafter/release-drafter@v6
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  release:
+  publish-tauri:
     needs: changelog
     permissions:
       contents: write
@@ -68,7 +71,7 @@ jobs:
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
         with:
           tagName: v__VERSION__
-          releaseName: MTP v__VERSION__
+          releaseName: 'MTP v__VERSION__'
           releaseBody: ${{ needs.changelog.outputs.changelog }}
           releaseDraft: true
           prerelease: false

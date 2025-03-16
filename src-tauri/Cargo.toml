@@ -1,6 +1,6 @@
 [package]
 name = "momotalk-plus"
-version = "1.0.1"
+version = "1.0.0"
 description = "MomoTalk Plus(MTP) 一款BA学生扮演聊天软件"
 authors = ["you"]
 edition = "2021"

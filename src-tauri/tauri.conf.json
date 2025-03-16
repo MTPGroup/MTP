@@ -1,7 +1,7 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
   "productName": "mtp-tauri",
-  "version": "0.1.0",
+  "version": "../package.json",
   "identifier": "com.mtp-tauri.app",
   "build": {
     "beforeDevCommand": "yarn dev",
@@ -27,6 +27,10 @@
   },
   "bundle": {
     "active": true,
+    "category": "Chat, AI, BlueArchive",
+    "copyright": "Copyright (c) 2025 MTPGroup",
+    "shortDescription": "MTP",
+    "licenseFile": "../LICENSE",
     "targets": "all",
     "resources": {
       "data/*": "data/"
@@ -37,6 +41,15 @@
       "icons/128x128@2x.png",
       "icons/icon.icns",
       "icons/icon.ico"
-    ]
+    ],
+    "createUpdaterArtifacts": true
+  },
+  "plugins": {
+    "updater": {
+      "endpoints": [
+        "https://github.com/MTPGroup/MTP/releases/latest/download/latest.json"
+      ],
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEEyNzgzMDc2MkVGMThDMkQKUldRdGpQRXVkakI0b3JNMlJPNExIdkhnZXIxK1QrMzNVa3cvdy9vdXpMYnQwcnZxeGpUa2UxOSsK"
+    }
   }
 }
